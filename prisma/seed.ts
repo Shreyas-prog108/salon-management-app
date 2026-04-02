@@ -1,4 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
@@ -126,7 +127,6 @@ async function main() {
         price: 110,
       },
     ],
-    skipDuplicates: true,
   });
 
   // Past appointments
@@ -183,7 +183,6 @@ async function main() {
         price: 95,
       },
     ],
-    skipDuplicates: true,
   });
 
   // Future appointments
@@ -220,7 +219,6 @@ async function main() {
         price: 40,
       },
     ],
-    skipDuplicates: true,
   });
 
   console.log('Seed data created successfully!');
