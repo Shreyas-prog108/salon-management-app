@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Salon {
+  id        Int    @id @default(autoincrement())
+  name      String @default("Glamour Studio")
+  openTime  String @default("09:00")
+  closeTime String @default("18:00")
+  workDays  String @default("1,2,3,4,5,6")
+}
+
+model Stylist {
+  id           Int           @id @default(autoincrement())
+  name         String
+  specialties  String
+  photoUrl     String?
+  slotDuration Int           @default(60)
+  appointments Appointment[]
+  createdAt    DateTime      @default(now())
+}
+
+model Appointment {
+  id            Int      @id @default(autoincrement())
+  stylistId     Int
+  stylist       Stylist  @relation(fields: [stylistId], references: [id], onDelete: Cascade)
+  customerName  String
+  customerPhone String
+  service       String
+  startTime     DateTime
+  endTime       DateTime
+  status        String   @default("confirmed")
+  isWalkin      Boolean  @default(false)
+  notes         String?
+  price         Float?
+  createdAt     DateTime @default(now())
+}
