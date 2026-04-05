@@ -1,0 +1,15 @@
+Flask
+Flask-SQLAlchemy
+Flask-Cors
+Flask-JWT-Extended
+Flask-Migrate
+Flask-Mail
+Werkzeug
+redis
+celery
+python-dotenv
+email-validator
+SQLAlchemy
+requests
+psycopg2-binary
+gunicorn

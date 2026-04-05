@@ -1,0 +1,95 @@
+# ── Python ────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+*.egg
+.installed.cfg
+.eggs/
+dist/
+build/
+develop-eggs/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+
+# ── Virtual environments ──────────────────────────────────────
+venv/
+env/
+ENV/
+backend/venv/
+
+# ── Flask / SQLAlchemy ────────────────────────────────────────
+instance/
+backend/instance/
+.webassets-cache
+*.db
+backend/salon.db
+
+# ── Environment files ─────────────────────────────────────────
+.env
+.env.local
+.env.production
+.env.development
+backend/.env
+backend/.env.production
+frontend/.env
+frontend/.env.local
+
+# ── Logs ──────────────────────────────────────────────────────
+*.log
+logs/
+backend/logs/
+
+# ── Celery ────────────────────────────────────────────────────
+celerybeat-schedule
+celerybeat-schedule.db
+celerybeat.pid
+backend/celerybeat-schedule
+backend/celerybeat-schedule.db
+backend/celerybeat.pid
+
+# ── Redis ─────────────────────────────────────────────────────
+dump.rdb
+backend/dump.rdb
+backend/redis.pid
+
+# ── Uploads / exports (user data, not code) ───────────────────
+backend/uploads/
+backend/exports/
+exports/
+reports/
+
+# ── Node / Next.js ────────────────────────────────────────────
+node_modules/
+frontend/node_modules/
+frontend/.next/
+frontend/dist/
+.next/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+bun.lockb
+
+# ── IDEs ──────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── OS ────────────────────────────────────────────────────────
+.DS_Store
+frontend/.DS_Store
+Thumbs.db
+
+# ── Misc ──────────────────────────────────────────────────────
+output/
+tmp/

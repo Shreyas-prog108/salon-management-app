@@ -1,0 +1,476 @@
+'use client'
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+
+export default function HomePage() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('opacity-100', 'translate-y-0');
+          entry.target.classList.remove('opacity-0', 'translate-y-8');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-up').forEach((el) => {
+      observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div className="font-sans text-textDark bg-white antialiased min-h-screen">
+      {/* 1. NAVBAR */}
+      <nav className="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-blush transition-all duration-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            {/* Logo */}
+            <div className="flex-shrink-0 flex items-center gap-2 cursor-pointer">
+              <svg className="w-8 h-8 text-plum" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
+              </svg>
+              <span className="font-serif font-bold text-2xl text-plum-bg tracking-tight">Baalbar</span>
+            </div>
+            
+            {/* Desktop Menu */}
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#features" className="text-gray-600 hover:text-plum transition-colors font-medium">Features</a>
+              <a href="#how-it-works" className="text-gray-600 hover:text-plum transition-colors font-medium">How it Works</a>
+              <Link href="/auth/login" className="text-gray-600 hover:text-plum transition-colors font-medium">Login</Link>
+              <Link href="/book" className="transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md bg-plum-gradient text-white px-6 py-2.5 rounded-full font-medium">
+                Book Appointment
+              </Link>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* 2. HERO SECTION */}
+      <header className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-[#2D1428]">
+        <div 
+          className="absolute inset-0 opacity-15"
+          style={{
+            backgroundImage: 'radial-gradient(rgba(168, 92, 138, 1) 2px, transparent 2px)',
+            backgroundSize: '30px 30px'
+          }}
+        />
+        <div className="absolute inset-0 bg-plum-gradient opacity-90"></div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Text Content */}
+            <div className={`text-center lg:text-left transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                Your Salon,<br/>Perfectly Managed
+              </h1>
+              <p className="text-lg sm:text-xl text-blush opacity-90 mb-8 max-w-2xl mx-auto lg:mx-0">
+                Baalbar helps salons streamline bookings, manage stylists, and delight customers — all in one place.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Link href="/auth/login" className="transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg bg-white text-plum-dark px-8 py-3.5 rounded-full font-semibold text-lg text-center">
+                  Get Started Free
+                </Link>
+                <a href="#demo" className="px-8 py-3.5 rounded-full font-semibold text-lg text-white border-2 border-white/30 hover:bg-white/10 transition-colors text-center">
+                  Book a Demo
+                </a>
+              </div>
+            </div>
+
+            {/* Mockup Area */}
+            <div className={`relative mt-12 lg:mt-0 transition-all duration-1000 delay-200 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              <div className="relative mx-auto w-full max-w-[350px]">
+                {/* Abstract Phone Mockup */}
+                <div className="rounded-[2.5rem] p-4 shadow-glass relative z-10 aspect-[9/19] bg-white/10 backdrop-blur-md border border-white/30 flex flex-col">
+                  {/* Fake UI */}
+                  <div className="w-full h-full bg-white rounded-[2rem] overflow-hidden flex flex-col relative shadow-inner">
+                    <div className="bg-blush p-6 text-center border-b border-pink-100">
+                      <div className="font-serif text-xl font-bold text-plum-dark">Book Appointment</div>
+                      <div className="text-xs text-gray-500 mt-1">Select your stylist & time</div>
+                    </div>
+                    <div className="p-4 space-y-4 flex-1 bg-gray-50">
+                      <div className="flex items-center gap-3 bg-white p-3 rounded-xl shadow-sm border border-gray-100">
+                        <div className="w-12 h-12 rounded-full bg-gray-200 overflow-hidden">
+                          <img src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?auto=format&fit=crop&w=100&q=80" className="w-full h-full object-cover" alt="Stylist" />
+                        </div>
+                        <div>
+                          <div className="font-medium text-sm">Aisha K.</div>
+                          <div className="text-xs text-gray-500">Senior Stylist</div>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="bg-plum/10 text-plum border border-plum/20 p-2 rounded-lg text-center text-xs font-medium">10:00 AM</div>
+                        <div className="bg-white text-gray-600 border border-gray-200 p-2 rounded-lg text-center text-xs font-medium">11:30 AM</div>
+                        <div className="bg-white text-gray-600 border border-gray-200 p-2 rounded-lg text-center text-xs font-medium">02:00 PM</div>
+                        <div className="bg-white text-gray-600 border border-gray-200 p-2 rounded-lg text-center text-xs font-medium">04:30 PM</div>
+                      </div>
+                      <div className="mt-4 bg-plum text-white text-center py-3 rounded-xl text-sm font-medium shadow-md">
+                        Confirm Booking
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Floating Badges */}
+                <div className="absolute -left-12 top-20 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full text-white text-sm font-medium shadow-lg z-20 whitespace-nowrap animate-bounce" style={{animationDuration: '3s'}}>
+                  ✓ Online Booking
+                </div>
+                <div className="absolute -right-8 top-1/2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full text-white text-sm font-medium shadow-lg z-20 whitespace-nowrap animate-bounce" style={{animationDuration: '3.5s', animationDelay: '0.5s'}}>
+                  ✓ Stylist Profiles
+                </div>
+                <div className="absolute -left-6 bottom-24 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full text-white text-sm font-medium shadow-lg z-20 whitespace-nowrap animate-bounce" style={{animationDuration: '4s', animationDelay: '1s'}}>
+                  ✓ Walk-in Management
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Bottom Wave */}
+        <div className="absolute bottom-0 w-full overflow-hidden leading-none">
+          <svg className="relative block w-full h-[50px] md:h-[100px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.08,130.83,120.35,193.38,109.8,236.4,102.5,279.16,81.1,321.39,56.44Z" fill="#F5EAF2"></path>
+          </svg>
+        </div>
+      </header>
+
+      {/* 3. SOCIAL PROOF BAR */}
+      <section className="bg-blush py-12 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 flex flex-col md:flex-row justify-around items-center gap-8">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-plum-dark mb-1">500+</div>
+              <div className="text-gray-600 font-medium">Salons</div>
+            </div>
+            <div className="hidden md:block w-px h-12 bg-plum/20"></div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-plum-dark mb-1">50,000+</div>
+              <div className="text-gray-600 font-medium">Appointments</div>
+            </div>
+            <div className="hidden md:block w-px h-12 bg-plum/20"></div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-plum-dark mb-1">4.9★</div>
+              <div className="text-gray-600 font-medium">Rating</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. FEATURES SECTION */}
+      <section id="features" className="py-24 bg-white relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 text-center max-w-3xl mx-auto mb-16">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-plum-bg mb-4">Everything you need to run your salon</h2>
+            <p className="text-lg text-gray-600">Powerful tools designed specifically for the unique needs of modern Indian salons and independent stylists.</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Feature 1 */}
+            <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 bg-white p-8 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-plum hover:shadow-card-lift">
+              <div className="w-12 h-12 bg-blush rounded-xl flex items-center justify-center text-plum mb-6">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              </div>
+              <h3 className="text-xl font-bold text-plum-bg mb-3">Online Booking</h3>
+              <p className="text-gray-600 leading-relaxed">Customers book 24/7 through your custom portal. No more missed calls or double bookings.</p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 delay-100 bg-white p-8 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-plum-light hover:shadow-card-lift">
+              <div className="w-12 h-12 bg-blush rounded-xl flex items-center justify-center text-plum mb-6">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+              </div>
+              <h3 className="text-xl font-bold text-plum-bg mb-3">Stylist Management</h3>
+              <p className="text-gray-600 leading-relaxed">Profiles, schedules, and specialties in one place. Let customers choose their favorite expert.</p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 delay-200 bg-white p-8 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-plum hover:shadow-card-lift">
+              <div className="w-12 h-12 bg-blush rounded-xl flex items-center justify-center text-plum mb-6">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              </div>
+              <h3 className="text-xl font-bold text-plum-bg mb-3">Walk-in Handling</h3>
+              <p className="text-gray-600 leading-relaxed">Quickly register walk-ins instantly alongside your online bookings to keep operations smooth.</p>
+            </div>
+
+            {/* Feature 4 */}
+            <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 delay-300 bg-white p-8 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-plum-light hover:shadow-card-lift">
+              <div className="w-12 h-12 bg-blush rounded-xl flex items-center justify-center text-plum mb-6">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              </div>
+              <h3 className="text-xl font-bold text-plum-bg mb-3">Smart Scheduling</h3>
+              <p className="text-gray-600 leading-relaxed">Time slots auto-generated from operating hours and service durations to maximize efficiency.</p>
+            </div>
+
+            {/* Feature 5 */}
+            <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 delay-400 bg-white p-8 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-plum hover:shadow-card-lift">
+              <div className="w-12 h-12 bg-blush rounded-xl flex items-center justify-center text-plum mb-6">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+              </div>
+              <h3 className="text-xl font-bold text-plum-bg mb-3">Photo Profiles</h3>
+              <p className="text-gray-600 leading-relaxed">Stylists showcase their best work with rich photo profiles to build trust and attract clients.</p>
+            </div>
+
+            {/* Feature 6 */}
+            <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 delay-500 bg-white p-8 rounded-2xl shadow-sm border border-gray-100 border-l-4 border-l-plum-light hover:shadow-card-lift">
+              <div className="w-12 h-12 bg-blush rounded-xl flex items-center justify-center text-plum mb-6">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+              </div>
+              <h3 className="text-xl font-bold text-plum-bg mb-3">Admin Dashboard</h3>
+              <p className="text-gray-600 leading-relaxed">Real-time analytics, revenue tracking, and a complete birds-eye view of your business.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. HOW IT WORKS */}
+      <section id="how-it-works" className="py-24 bg-plum-gradient relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 text-center mb-16">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-4">How it works for your clients</h2>
+            <p className="text-blush text-lg max-w-2xl mx-auto">A seamless booking experience that keeps them coming back.</p>
+          </div>
+
+          <div className="relative">
+            {/* Connecting Line (Desktop) */}
+            <div className="hidden md:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-white/20 z-0"></div>
+
+            <div className="grid md:grid-cols-3 gap-12 text-center relative z-10">
+              {/* Step 1 */}
+              <div className="fade-up opacity-0 translate-y-8 transition-all duration-700">
+                <div className="w-24 h-24 mx-auto bg-plum-light text-white rounded-full flex items-center justify-center text-3xl font-bold shadow-lg border-4 border-white/20 mb-6">1</div>
+                <h3 className="text-xl font-bold text-white mb-3">Choose Service</h3>
+                <p className="text-blush opacity-90">Customer selects their desired service and favorite stylist from your menu.</p>
+              </div>
+
+              {/* Step 2 */}
+              <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 delay-200">
+                <div className="w-24 h-24 mx-auto bg-plum-light text-white rounded-full flex items-center justify-center text-3xl font-bold shadow-lg border-4 border-white/20 mb-6">2</div>
+                <h3 className="text-xl font-bold text-white mb-3">Pick a Time</h3>
+                <p className="text-blush opacity-90">They pick a date and an available time slot that fits their schedule.</p>
+              </div>
+
+              {/* Step 3 */}
+              <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 delay-400">
+                <div className="w-24 h-24 mx-auto bg-plum-light text-white rounded-full flex items-center justify-center text-3xl font-bold shadow-lg border-4 border-white/20 mb-6">3</div>
+                <h3 className="text-xl font-bold text-white mb-3">Instant Confirmation</h3>
+                <p className="text-blush opacity-90">Booking is confirmed instantly. Both you and the client get notified.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. STYLIST SHOWCASE */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 flex flex-col md:flex-row justify-between items-end mb-12">
+            <div>
+              <h2 className="font-serif text-3xl md:text-4xl font-bold text-plum-bg mb-4">Meet Our Stylists</h2>
+              <p className="text-gray-600 max-w-xl">Empower your team to showcase their unique skills and build a loyal client base.</p>
+            </div>
+            <div className="mt-6 md:mt-0">
+              <a href="#" className="text-plum font-semibold hover:text-plum-dark transition-colors flex items-center gap-2">
+                View All Examples <span>&rarr;</span>
+              </a>
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Card 1 */}
+            <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 group bg-white border border-gray-100 p-6 rounded-2xl text-center hover:bg-blush shadow-sm hover:shadow-md">
+              <div className="w-28 h-28 mx-auto rounded-full overflow-hidden mb-4 border-4 border-white shadow-sm">
+                <img src="https://images.unsplash.com/photo-1580618672591-eb180b1a973f?auto=format&fit=crop&w=250&q=80" alt="Stylist" className="w-full h-full object-cover" />
+              </div>
+              <h3 className="text-lg font-bold text-plum-bg">Rahul Verma</h3>
+              <p className="text-sm text-plum-light font-medium mb-2">Master Barber</p>
+              <div className="flex justify-center text-yellow-400 mb-6 text-sm">★★★★★ <span className="text-gray-400 ml-1">(120)</span></div>
+              <button className="w-full py-2 rounded-full border border-plum text-plum font-medium group-hover:bg-plum group-hover:text-white transition-colors">Book Rahul</button>
+            </div>
+
+            {/* Card 2 */}
+            <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 delay-100 group bg-white border border-gray-100 p-6 rounded-2xl text-center hover:bg-blush shadow-sm hover:shadow-md">
+              <div className="w-28 h-28 mx-auto rounded-full overflow-hidden mb-4 border-4 border-white shadow-sm">
+                <img src="https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=250&q=80" alt="Stylist" className="w-full h-full object-cover" />
+              </div>
+              <h3 className="text-lg font-bold text-plum-bg">Priya Sharma</h3>
+              <p className="text-sm text-plum-light font-medium mb-2">Color Specialist</p>
+              <div className="flex justify-center text-yellow-400 mb-6 text-sm">★★★★★ <span className="text-gray-400 ml-1">(85)</span></div>
+              <button className="w-full py-2 rounded-full border border-plum text-plum font-medium group-hover:bg-plum group-hover:text-white transition-colors">Book Priya</button>
+            </div>
+
+            {/* Card 3 */}
+            <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 delay-200 group bg-white border border-gray-100 p-6 rounded-2xl text-center hover:bg-blush shadow-sm hover:shadow-md">
+              <div className="w-28 h-28 mx-auto rounded-full overflow-hidden mb-4 border-4 border-white shadow-sm">
+                <img src="https://images.unsplash.com/photo-1595152772835-219674b2a8a6?auto=format&fit=crop&w=250&q=80" alt="Stylist" className="w-full h-full object-cover" />
+              </div>
+              <h3 className="text-lg font-bold text-plum-bg">Anita Desai</h3>
+              <p className="text-sm text-plum-light font-medium mb-2">Bridal Makeup</p>
+              <div className="flex justify-center text-yellow-400 mb-6 text-sm">★★★★<span className="text-gray-300">★</span> <span className="text-gray-400 ml-1">(42)</span></div>
+              <button className="w-full py-2 rounded-full border border-plum text-plum font-medium group-hover:bg-plum group-hover:text-white transition-colors">Book Anita</button>
+            </div>
+
+            {/* Card 4 */}
+            <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 delay-300 group bg-white border border-gray-100 p-6 rounded-2xl text-center hover:bg-blush shadow-sm hover:shadow-md">
+              <div className="w-28 h-28 mx-auto rounded-full overflow-hidden mb-4 border-4 border-white shadow-sm">
+                <img src="https://images.unsplash.com/photo-1520261314352-0ac1e8886987?auto=format&fit=crop&w=250&q=80" alt="Stylist" className="w-full h-full object-cover" />
+              </div>
+              <h3 className="text-lg font-bold text-plum-bg">Karan Patel</h3>
+              <p className="text-sm text-plum-light font-medium mb-2">Styling Expert</p>
+              <div className="flex justify-center text-yellow-400 mb-6 text-sm">★★★★★ <span className="text-gray-400 ml-1">(210)</span></div>
+              <button className="w-full py-2 rounded-full border border-plum text-plum font-medium group-hover:bg-plum group-hover:text-white transition-colors">Book Karan</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section Divider (Scissors SVG) */}
+      <div className="flex justify-center bg-white pb-12 text-plum/20">
+        <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
+        </svg>
+      </div>
+
+      {/* 7. TESTIMONIALS */}
+      <section className="py-24 bg-blush">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 text-center mb-16">
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-plum-bg mb-4">Loved by Salon Owners</h2>
+            <p className="text-lg text-gray-600">See what our partners are saying about Baalbar.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Testimonial 1 */}
+            <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 bg-white p-8 rounded-2xl shadow-sm relative">
+              <div className="absolute top-6 right-8 text-6xl text-plum/10 font-serif leading-none">"</div>
+              <div className="flex items-center gap-4 mb-6">
+                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=100&q=80" alt="Avatar" className="w-14 h-14 rounded-full object-cover" />
+                <div>
+                  <h4 className="font-bold text-plum-bg">Meera Reddy</h4>
+                  <p className="text-sm text-gray-500">Glow & Go Salon</p>
+                </div>
+              </div>
+              <div className="text-yellow-400 text-sm mb-4">★★★★★</div>
+              <p className="text-gray-600 italic">"Switching to Baalbar completely eliminated our double-booking issues. My staff loves the interface, and our clients appreciate booking at 2 AM!"</p>
+            </div>
+
+            {/* Testimonial 2 */}
+            <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 delay-150 bg-white p-8 rounded-2xl shadow-sm relative">
+              <div className="absolute top-6 right-8 text-6xl text-plum/10 font-serif leading-none">"</div>
+              <div className="flex items-center gap-4 mb-6">
+                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=100&q=80" alt="Avatar" className="w-14 h-14 rounded-full object-cover" />
+                <div>
+                  <h4 className="font-bold text-plum-bg">Vikram Singh</h4>
+                  <p className="text-sm text-gray-500">The Gentlemen's Chair</p>
+                </div>
+              </div>
+              <div className="text-yellow-400 text-sm mb-4">★★★★★</div>
+              <p className="text-gray-600 italic">"The walk-in management paired with scheduled appointments is a game changer for a busy barbershop like ours. Highly recommend."</p>
+            </div>
+
+            {/* Testimonial 3 */}
+            <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 delay-300 bg-white p-8 rounded-2xl shadow-sm relative">
+              <div className="absolute top-6 right-8 text-6xl text-plum/10 font-serif leading-none">"</div>
+              <div className="flex items-center gap-4 mb-6">
+                <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=100&q=80" alt="Avatar" className="w-14 h-14 rounded-full object-cover" />
+                <div>
+                  <h4 className="font-bold text-plum-bg">Neha Kapoor</h4>
+                  <p className="text-sm text-gray-500">Aura Beauty Lounge</p>
+                </div>
+              </div>
+              <div className="text-yellow-400 text-sm mb-4">★★★★★</div>
+              <p className="text-gray-600 italic">"Baalbar's analytics helped me understand my peak hours and which stylists drive the most revenue. It's beautiful and powerful."</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. CTA BANNER */}
+      <section className="py-20 bg-plum-gradient text-center px-4">
+        <div className="fade-up opacity-0 translate-y-8 transition-all duration-700 max-w-4xl mx-auto">
+          <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-6">Ready to transform your salon?</h2>
+          <p className="text-xl text-blush mb-10 max-w-2xl mx-auto opacity-90">Join thousands of salons already using Baalbar to grow their business and delight their customers.</p>
+          <Link href="/auth/login" className="inline-block transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl bg-white text-plum-dark px-10 py-4 rounded-full font-bold text-lg shadow-xl">
+            Start Free Today &rarr;
+          </Link>
+        </div>
+      </section>
+
+      {/* 10. FOOTER */}
+      <footer className="bg-[#2D1428] pt-16 pb-8 border-t border-plum-dark">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+            {/* Brand */}
+            <div className="col-span-2 lg:col-span-2">
+              <div className="flex items-center gap-2 mb-4">
+                <svg className="w-8 h-8 text-plum-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
+                </svg>
+                <span className="font-serif font-bold text-2xl text-white tracking-tight">Baalbar</span>
+              </div>
+              <p className="text-gray-400 max-w-sm mb-6">The all-in-one platform for modern salons to manage bookings, staff, and growth.</p>
+              
+              {/* Socials */}
+              <div className="flex space-x-4">
+                <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-plum hover:text-white transition-colors">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+                </a>
+                <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-plum hover:text-white transition-colors">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </a>
+                <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-400 hover:bg-plum hover:text-white transition-colors">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+                </a>
+              </div>
+            </div>
+
+            {/* Product Links */}
+            <div>
+              <h5 className="text-white font-semibold mb-4">Product</h5>
+              <ul className="space-y-3">
+                <li><a href="#" className="text-gray-400 hover:text-plum-light transition-colors text-sm">Features</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-plum-light transition-colors text-sm">Pricing</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-plum-light transition-colors text-sm">Integrations</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-plum-light transition-colors text-sm">Changelog</a></li>
+              </ul>
+            </div>
+
+            {/* Company Links */}
+            <div>
+              <h5 className="text-white font-semibold mb-4">Company</h5>
+              <ul className="space-y-3">
+                <li><a href="#" className="text-gray-400 hover:text-plum-light transition-colors text-sm">About Us</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-plum-light transition-colors text-sm">Careers</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-plum-light transition-colors text-sm">Blog</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-plum-light transition-colors text-sm">Contact</a></li>
+              </ul>
+            </div>
+
+            {/* Support Links */}
+            <div>
+              <h5 className="text-white font-semibold mb-4">Support & Legal</h5>
+              <ul className="space-y-3">
+                <li><a href="#" className="text-gray-400 hover:text-plum-light transition-colors text-sm">Help Center</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-plum-light transition-colors text-sm">Privacy Policy</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-plum-light transition-colors text-sm">Terms of Service</a></li>
+                <li><a href="#" className="text-gray-400 hover:text-plum-light transition-colors text-sm">Status</a></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-gray-500 text-sm">© 2026 Baalbar. Made with ♥ for salons.</p>
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <span className="w-2 h-2 rounded-full bg-green-500"></span>
+              All systems operational
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
