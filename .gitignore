@@ -93,3 +93,4 @@ Thumbs.db
 # ── Misc ──────────────────────────────────────────────────────
 output/
 tmp/
+backend/create_admin.py
