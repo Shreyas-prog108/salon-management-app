@@ -66,7 +66,7 @@ After=network.target postgresql.service redis.service
 User=$USER
 WorkingDirectory=$APP_DIR/backend
 EnvironmentFile=$APP_DIR/backend/.env
-ExecStart=$APP_VENV/gunicorn -w 2 -b 127.0.0.1:5000 app:app
+ExecStart=$APP_VENV/gunicorn -w 2 -b 127.0.0.1:5000 wsgi:app
 Restart=always
 RestartSec=5
 
