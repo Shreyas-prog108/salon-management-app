@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  production: {
+    sourcemap: false,
+  },
   favicon: "/favicon.svg",
   images: {
     remotePatterns: [

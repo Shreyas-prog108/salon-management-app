@@ -52,13 +52,13 @@
 
   /* ── Cards ───────────────────────────────────────────────── */
   .card {
-    @apply bg-white/5 backdrop-blur-md rounded-[1.5rem] shadow-[0_8px_30px_rgba(0,0,0,0.2)] mb-6 border border-white/10 overflow-hidden;
+    @apply bg-white/10 backdrop-blur-md rounded-[1.5rem] shadow-[0_8px_30px_rgba(0,0,0,0.2)] mb-6 border border-white/20 overflow-hidden;
   }
   .card-header {
-    @apply text-white font-serif text-xl px-6 py-5 border-b border-white/10 bg-black/20 flex justify-between items-center;
+    @apply text-white font-serif text-xl px-6 py-5 border-b border-white/20 bg-black/30 flex justify-between items-center;
   }
   .card-body {
-    @apply p-6 text-stone-300;
+    @apply p-6 text-stone-200 overflow-y-auto max-h-[60vh];
   }
 
   /* ── Stat cards ──────────────────────────────────────────── */
@@ -126,7 +126,7 @@
 
   /* ── Forms ───────────────────────────────────────────────── */
   .form-control, .form-select {
-    @apply w-full px-4 py-3 border border-white/10 rounded-xl text-sm bg-black/40 text-white placeholder-stone-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all;
+    @apply w-full px-4 py-3 border border-white/30 rounded-xl text-sm bg-black/50 text-white placeholder-stone-400 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all;
   }
   .form-label {
     @apply block text-sm font-medium text-stone-300 mb-1.5;
@@ -278,9 +278,9 @@
     background: transparent;
   }
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-stone-700/50 rounded-full;
+    @apply bg-slate-700/50 rounded-full;
   }
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    @apply bg-stone-600;
+    @apply bg-slate-600;
   }
   .table { @apply bg-transparent; }
