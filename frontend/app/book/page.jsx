@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
@@ -75,7 +75,7 @@ function availabilityLabel(status) {
   return 'Available'
 }
 
-export default function BookPage() {
+function BookPageContent() {
   const searchParams = useSearchParams()
   const [bookingMode, setBookingMode] = useState('date_time')
   const [step, setStep] = useState(0)
@@ -1058,5 +1058,13 @@ export default function BookPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function BookPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><span className="loading"></span></div>}>
+      <BookPageContent />
+    </Suspense>
   )
 }
