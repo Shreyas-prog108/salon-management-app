@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  favicon: "/favicon.svg",
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
