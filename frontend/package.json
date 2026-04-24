@@ -17,6 +17,7 @@
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.11",
     "eslint": "^10.2.0",
     "eslint-config-next": "^16.2.2",
     "tailwindcss": "3"

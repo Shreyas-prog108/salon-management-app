@@ -1,30 +1,113 @@
 services:
   postgres:
-    image: postgres:16-alpine
-    container_name: salon_postgres
+    image: ${POSTGRES_IMAGE:-postgres:16-alpine}
+    container_name: ${APP_POSTGRES_CONTAINER_NAME:-salon_postgres}
     restart: unless-stopped
     environment:
-      POSTGRES_DB: salon
-      POSTGRES_USER: salon_user
-      POSTGRES_PASSWORD: salon_pass
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5432:5432"
+      - "${APP_POSTGRES_HOST_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U salon_user -d salon"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
 
   redis:
-    image: redis:7-alpine
-    container_name: salon_redis
+    image: ${REDIS_IMAGE:-redis:7-alpine}
+    container_name: ${APP_REDIS_CONTAINER_NAME:-salon_redis}
     restart: unless-stopped
     ports:
-      - "6380:6379"
+      - "${APP_REDIS_HOST_PORT:-6380}:6379"
     volumes:
       - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${APP_BACKEND_CONTAINER_NAME:-salon_backend}
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      REDIS_URL: redis://redis:6379/${APP_REDIS_DB:-0}
+      CELERY_BROKER_URL: redis://redis:6379/${APP_REDIS_DB:-0}
+      CELERY_RESULT_BACKEND: redis://redis:6379/${APP_REDIS_DB:-0}
+      FLASK_ENV: ${FLASK_ENV:-development}
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: python app.py
+    ports:
+      - "${APP_BACKEND_HOST_PORT:-5000}:5000"
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${APP_CELERY_WORKER_CONTAINER_NAME:-salon_celery_worker}
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      REDIS_URL: redis://redis:6379/${APP_REDIS_DB:-0}
+      CELERY_BROKER_URL: redis://redis:6379/${APP_REDIS_DB:-0}
+      CELERY_RESULT_BACKEND: redis://redis:6379/${APP_REDIS_DB:-0}
+      FLASK_ENV: ${FLASK_ENV:-development}
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: celery -A celery_app worker --loglevel=info --pool=solo -n ${APP_CELERY_WORKER_NODE_NAME:-salon-worker}@%h
+
+  celery_beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${APP_CELERY_BEAT_CONTAINER_NAME:-salon_celery_beat}
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      REDIS_URL: redis://redis:6379/${APP_REDIS_DB:-0}
+      CELERY_BROKER_URL: redis://redis:6379/${APP_REDIS_DB:-0}
+      CELERY_RESULT_BACKEND: redis://redis:6379/${APP_REDIS_DB:-0}
+      FLASK_ENV: ${FLASK_ENV:-development}
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: celery -A celery_app beat --loglevel=info --pidfile= --schedule /app/celerybeat-schedule
 
 volumes:
   postgres_data:

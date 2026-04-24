@@ -10,9 +10,10 @@ const COOKIE_OPTS = {
   path: '/',
 }
 
-async function proxyToFlask(method, url, { accessToken, body } = {}) {
+async function proxyToFlask(method, url, { accessToken, body, headers: extraHeaders } = {}) {
   const headers = {}
   if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`
+  if (extraHeaders) Object.assign(headers, extraHeaders)
   if (body !== undefined && !(body instanceof FormData)) {
     headers['Content-Type'] = 'application/json'
   }
@@ -28,22 +29,25 @@ async function handler(request, { params }) {
   const resolvedParams = await params
   const path = resolvedParams.path.join('/')
 
-  // Logout: clear cookies server-side, no Flask call needed
-  if (path === 'auth/logout') {
-    const res = NextResponse.json({ message: 'Logged out' })
-    const cookieStore = await cookies()
-    cookieStore.delete('access_token')
-    cookieStore.delete('refresh_token')
-    cookieStore.delete('user')
-    return res
-  }
-
   const search = new URL(request.url).search
   const flaskUrl = `${FLASK}/api/${path}${search}`
 
   const cookieStore = await cookies()
   let accessToken = cookieStore.get('access_token')?.value
   const refreshToken = cookieStore.get('refresh_token')?.value
+
+  if (path === 'auth/logout') {
+    await proxyToFlask('POST', `${FLASK}/api/auth/logout`, {
+      accessToken,
+      body: { refresh_token: refreshToken },
+    }).catch(() => null)
+
+    const res = NextResponse.json({ message: 'Logged out' })
+    res.cookies.delete('access_token')
+    res.cookies.delete('refresh_token')
+    res.cookies.delete('user')
+    return res
+  }
 
   // Parse request body
   let body
@@ -65,6 +69,7 @@ async function handler(request, { params }) {
 
   // Transparent token refresh on 401
   let newAccessToken = null
+  let responseRefreshToken = null
   if (flaskRes.status === 401 && refreshToken) {
     const refreshRes = await proxyToFlask('POST', `${FLASK}/api/auth/refresh`, {
       accessToken: refreshToken,
@@ -72,9 +77,14 @@ async function handler(request, { params }) {
     if (refreshRes.ok) {
       const refreshData = await refreshRes.json()
       newAccessToken = refreshData.access_token
+      const newRefreshToken = refreshData.refresh_token
       accessToken = newAccessToken
       // Retry original request with new token
       flaskRes = await proxyToFlask(request.method, flaskUrl, { accessToken, body })
+
+      if (newRefreshToken) {
+        responseRefreshToken = newRefreshToken
+      }
     }
   }
 
@@ -116,6 +126,9 @@ async function handler(request, { params }) {
   // Persist refreshed access token
   if (newAccessToken) {
     response.cookies.set('access_token', newAccessToken, { ...COOKIE_OPTS, maxAge: 900 })
+  }
+  if (responseRefreshToken) {
+    response.cookies.set('refresh_token', responseRefreshToken, { ...COOKIE_OPTS, maxAge: 2592000 })
   }
 
   return response

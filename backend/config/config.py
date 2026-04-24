@@ -18,8 +18,8 @@ class Config:
     if not JWT_SECRET_KEY:
         raise ValueError("JWT_SECRET_KEY environment variable is required")
 
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
-    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=30)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=int(os.getenv("JWT_ACCESS_TOKEN_MINUTES", "15")))
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=int(os.getenv("JWT_REFRESH_TOKEN_DAYS", "30")))
     JWT_ALGORITHM = "HS256"
     JSON_SORT_KEYS = False
 
@@ -37,6 +37,7 @@ class Config:
     CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", default_redis_url)
     CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", default_redis_url)
     SALON_TIMEZONE = os.getenv("SALON_TIMEZONE", "Asia/Kolkata")
+    SALON_TOTAL_SEATS = int(os.getenv("SALON_TOTAL_SEATS", "3"))
 
     MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.gmail.com")
     MAIL_PORT = int(os.getenv("MAIL_PORT", 587))
@@ -65,7 +66,12 @@ class ProductionConfig(Config):
 class TestingConfig(Config):
     DEBUG = True
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
+    SQLALCHEMY_DATABASE_URI = os.getenv("TEST_DATABASE_URL", os.getenv("DATABASE_URL", "sqlite:///:memory:"))
+    SQLALCHEMY_ENGINE_OPTIONS = (
+        {"connect_args": {"check_same_thread": False}}
+        if SQLALCHEMY_DATABASE_URI.startswith("sqlite")
+        else {}
+    )
 
 
 config = {

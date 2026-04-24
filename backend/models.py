@@ -1,8 +1,7 @@
 from datetime import datetime, timezone
 
-from werkzeug.security import check_password_hash, generate_password_hash
-
 from app import db
+from app.utils.security import hash_password, verify_password
 
 
 # Association table for stylist ↔ services (many-to-many)
@@ -50,10 +49,10 @@ class User(db.Model):
     )
 
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.password_hash = hash_password(password)
 
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        return verify_password(self.password_hash, password)
 
     def to_dict(self):
         data = {
@@ -114,6 +113,8 @@ class Appointment(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     stylist_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
     service_id = db.Column(db.Integer, db.ForeignKey("services.id"), nullable=True)
+    seat_id = db.Column(db.Integer, nullable=True)
+    time_slot = db.Column(db.String(5), nullable=True, index=True)
     customer_name = db.Column(db.String(150), nullable=False)
     customer_phone = db.Column(db.String(20), nullable=False)
     customer_email = db.Column(db.String(120), nullable=True)
@@ -127,6 +128,12 @@ class Appointment(db.Model):
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
 
     service = db.relationship("Service", backref="appointments")
+    slot_blocks = db.relationship(
+        "AppointmentSlot",
+        backref="appointment",
+        cascade="all,delete-orphan",
+        lazy="select",
+    )
     service_record = db.relationship(
         "ServiceRecord", backref="appointment", uselist=False, cascade="all,delete-orphan"
     )
@@ -135,12 +142,15 @@ class Appointment(db.Model):
         data = {
             "id": self.id,
             "stylist_id": self.stylist_id,
+            "barber_id": self.stylist_id,
             "service_id": self.service_id,
+            "seat_id": self.seat_id,
             "customer_name": self.customer_name,
             "customer_phone": self.customer_phone,
             "customer_email": self.customer_email,
             "appointment_date": self.appointment_date.isoformat() if self.appointment_date else None,
             "appointment_time": self.appointment_time.isoformat() if self.appointment_time else None,
+            "time_slot": self.time_slot or (self.appointment_time.strftime("%H:%M") if self.appointment_time else None),
             "status": self.status,
             "reason": self.reason,
             "is_walkin": self.is_walkin,
@@ -184,6 +194,37 @@ class ServiceRecord(db.Model):
         }
 
 
+class AppointmentSlot(db.Model):
+    __tablename__ = "appointment_slots"
+    __table_args__ = (
+        db.UniqueConstraint("appointment_date", "time_slot", "seat_id", name="uq_slot_seat"),
+        db.UniqueConstraint("appointment_date", "time_slot", "stylist_id", name="uq_slot_stylist"),
+        db.Index("ix_appointment_slots_date_time", "appointment_date", "time_slot"),
+    )
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    appointment_id = db.Column(
+        db.Integer,
+        db.ForeignKey("appointments.id"),
+        nullable=False,
+        index=True,
+    )
+    appointment_date = db.Column(db.Date, nullable=False, index=True)
+    time_slot = db.Column(db.String(5), nullable=False, index=True)
+    seat_id = db.Column(db.Integer, nullable=False)
+    stylist_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "appointment_id": self.appointment_id,
+            "appointment_date": self.appointment_date.isoformat() if self.appointment_date else None,
+            "time_slot": self.time_slot,
+            "seat_id": self.seat_id,
+            "stylist_id": self.stylist_id,
+        }
+
+
 class SalonOperatingHours(db.Model):
     __tablename__ = "salon_operating_hours"
 
@@ -192,6 +233,7 @@ class SalonOperatingHours(db.Model):
     open_time = db.Column(db.Time, nullable=True)
     close_time = db.Column(db.Time, nullable=True)
     is_open = db.Column(db.Boolean, default=True)
+    total_seats = db.Column(db.Integer, nullable=False, default=3)
 
     def to_dict(self):
         return {
@@ -200,6 +242,7 @@ class SalonOperatingHours(db.Model):
             "open_time": self.open_time.isoformat() if self.open_time else None,
             "close_time": self.close_time.isoformat() if self.close_time else None,
             "is_open": self.is_open,
+            "total_seats": self.total_seats,
         }
 
 
@@ -218,6 +261,30 @@ class StylistAvailability(db.Model):
             "id": self.id,
             "stylist_id": self.stylist_id,
             "date": self.date.isoformat() if self.date else None,
+            "start_time": self.start_time.isoformat() if self.start_time else None,
+            "end_time": self.end_time.isoformat() if self.end_time else None,
+            "is_available": self.is_available,
+        }
+
+
+class StylistWeeklyAvailability(db.Model):
+    __tablename__ = "stylist_weekly_availability"
+    __table_args__ = (
+        db.UniqueConstraint("stylist_id", "day_of_week", name="uq_stylist_weekly_day"),
+    )
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    stylist_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
+    day_of_week = db.Column(db.Integer, nullable=False, index=True)  # 0=Mon … 6=Sun
+    start_time = db.Column(db.Time, nullable=True)
+    end_time = db.Column(db.Time, nullable=True)
+    is_available = db.Column(db.Boolean, default=True)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "stylist_id": self.stylist_id,
+            "day_of_week": self.day_of_week,
             "start_time": self.start_time.isoformat() if self.start_time else None,
             "end_time": self.end_time.isoformat() if self.end_time else None,
             "is_available": self.is_available,

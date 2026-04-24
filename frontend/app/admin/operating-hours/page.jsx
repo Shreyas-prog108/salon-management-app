@@ -10,6 +10,7 @@ function defaultHours() {
     day_of_week: i,
     open_time: '09:00',
     close_time: '18:00',
+    total_seats: 3,
     is_open: i !== 0  // Sunday closed by default
   }))
 }
@@ -32,8 +33,14 @@ export default function OperatingHoursPage() {
         setHours(Array.from({ length: 7 }, (_, i) => {
           const entry = map.get(i)
           return entry
-            ? { day_of_week: i, open_time: entry.open_time?.slice(0, 5) || '09:00', close_time: entry.close_time?.slice(0, 5) || '18:00', is_open: entry.is_open }
-            : { day_of_week: i, open_time: '09:00', close_time: '18:00', is_open: i !== 0 }
+            ? {
+                day_of_week: i,
+                open_time: entry.open_time?.slice(0, 5) || '09:00',
+                close_time: entry.close_time?.slice(0, 5) || '18:00',
+                total_seats: entry.total_seats ?? 3,
+                is_open: entry.is_open
+              }
+            : { day_of_week: i, open_time: '09:00', close_time: '18:00', total_seats: 3, is_open: i !== 0 }
         }))
       }
     } catch (error) {
@@ -52,6 +59,15 @@ export default function OperatingHoursPage() {
     setMessage('')
     setSaving(true)
     try {
+      for (const day of hours) {
+        const seats = Number(day.total_seats)
+        if (!Number.isInteger(seats) || seats < 1) {
+          throw { response: { data: { error: `${DAY_NAMES[day.day_of_week]} must have at least 1 seat` } } }
+        }
+        if (day.is_open && day.close_time <= day.open_time) {
+          throw { response: { data: { error: `${DAY_NAMES[day.day_of_week]} close time must be after open time` } } }
+        }
+      }
       await apiService.updateOperatingHours(hours)
       setMessage('Operating hours saved successfully.')
     } catch (error) {
@@ -77,7 +93,7 @@ export default function OperatingHoursPage() {
               <div className="space-y-3">
                 {hours.map(day => (
                   <div key={day.day_of_week} className="p-4 border border-gray-200 rounded-lg">
-                    <div className="grid grid-cols-4 gap-4 items-center">
+                    <div className="grid grid-cols-5 gap-4 items-center">
                       <div className="flex items-center gap-3">
                         <input
                           type="checkbox"
@@ -113,11 +129,22 @@ export default function OperatingHoursPage() {
                         />
                       </div>
 
+                      <div>
+                        <label className="form-label">Seats</label>
+                        <input
+                          type="number"
+                          min="1"
+                          className="form-control"
+                          value={day.total_seats}
+                          onChange={e => updateDay(day.day_of_week, 'total_seats', e.target.value)}
+                        />
+                      </div>
+
                       <div className="flex items-center pt-5">
                         {day.is_open ? (
-                          <span className="badge bg-success">Open</span>
+                          <span className="badge bg-success">Open • {day.total_seats} seats</span>
                         ) : (
-                          <span className="badge bg-danger">Closed</span>
+                          <span className="badge bg-danger">Closed • {day.total_seats} seats</span>
                         )}
                       </div>
                     </div>

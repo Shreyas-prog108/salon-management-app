@@ -195,8 +195,15 @@ export default function AdminStylistsPage() {
               <table className="table">
                 <thead>
                   <tr>
-                    <th>Photo</th><th>Name</th><th>Email</th><th>Phone</th>
-                    <th>Specialty</th><th>Service</th><th>Exp</th><th>Status</th><th>Actions</th>
+                    <th className="w-16">Photo</th>
+                    <th className="min-w-[150px]">Name</th>
+                    <th className="min-w-[200px]">Email</th>
+                    <th className="min-w-[150px]">Phone</th>
+                    <th className="min-w-[150px]">Specialty</th>
+                    <th className="max-w-[250px]">Service</th>
+                    <th className="w-20">Exp</th>
+                    <th className="w-24">Status</th>
+                    <th className="w-24">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -209,7 +216,7 @@ export default function AdminStylistsPage() {
                       <td>{stylist.email}</td>
                       <td>{stylist.phone || '—'}</td>
                       <td>{stylist.specialty || '—'}</td>
-                      <td className="text-xs">{stylist.services?.length ? stylist.services.map(s => s.name).join(', ') : '—'}</td>
+                      <td className="text-xs max-w-[250px] truncate" title={stylist.services?.length ? stylist.services.map(s => s.name).join(', ') : '—'}>{stylist.services?.length ? stylist.services.map(s => s.name).join(', ') : '—'}</td>
                       <td>{stylist.experience_years ?? 0} yrs</td>
                       <td>
                         <span className={`badge ${stylist.is_active ? 'bg-success' : 'bg-danger'}`}>

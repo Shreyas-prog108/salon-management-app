@@ -60,7 +60,7 @@ class APIService {
   }
 
   // ── Admin: Dashboard ──────────────────────────────────────────
-  getAdminDashboard() { return this._request('GET', 'admin/dashboard') }
+  getAdminDashboard(date) { return this._request('GET', 'admin/dashboard', { params: { date } }) }
   getAdminAnalytics(period) { return this._request('GET', 'admin/analytics', { params: { period } }) }
 
   // ── Admin: Services ───────────────────────────────────────────
@@ -89,9 +89,9 @@ class APIService {
   addServiceRecord(id, data) { return this._request('POST', `stylist/appointments/${id}/service-record`, { body: data }) }
 
   // ── Stylist: Availability ─────────────────────────────────────
-  getStylistAvailability(params) { return this._request('GET', 'stylist/availability', { params }) }
-  addAvailabilitySlot(data) { return this._request('POST', 'stylist/availability', { body: data }) }
-  deleteAvailabilitySlot(id) { return this._request('DELETE', `stylist/availability/${id}`) }
+  getStylistWeeklyAvailability() { return this._request('GET', 'stylist/weekly-availability') }
+  createStylistWeeklyAvailability(data) { return this._request('POST', 'stylist/weekly-availability', { body: data }) }
+  updateStylistWeeklyAvailability(id, data) { return this._request('PUT', `stylist/weekly-availability/${id}`, { body: data }) }
 
   // ── Stylist: Profile ──────────────────────────────────────────
   getStylistProfile() { return this._request('GET', 'stylist/profile') }
@@ -102,7 +102,14 @@ class APIService {
   // ── Public Booking ────────────────────────────────────────────
   getPublicServices() { return this._request('GET', 'booking/services') }
   getPublicStylists(params) { return this._request('GET', 'booking/stylists', { params }) }
+  getBookingAvailability(date, serviceId, params = {}) {
+    return this._request('GET', 'booking/availability', {
+      params: { date, service_id: serviceId, ...params }
+    })
+  }
+  getBookingSlotDetails(date, timeSlot, serviceId) { return this._request('GET', 'booking/availability/details', { params: { date, time_slot: timeSlot, service_id: serviceId } }) }
   getStylistSlots(stylistId, date, serviceId) { return this._request('GET', `booking/stylists/${stylistId}/availability`, { params: { date, service_id: serviceId } }) }
+  getStylistSchedule(stylistId, params) { return this._request('GET', `booking/stylists/${stylistId}/schedule`, { params }) }
   bookAppointment(data) { return this._request('POST', 'booking/appointments', { body: data }) }
   createWalkin(data) { return this._request('POST', 'booking/walkin', { body: data }) }
   lookupAppointments(phone) { return this._request('GET', 'booking/appointments/lookup', { params: { phone } }) }

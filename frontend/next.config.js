@@ -4,7 +4,6 @@ const nextConfig = {
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'http', hostname: 'localhost' },
-      // Allow Railway backend domain for uploaded photos
       { protocol: 'https', hostname: '*.railway.app' },
       { protocol: 'https', hostname: '*.up.railway.app' },
     ],

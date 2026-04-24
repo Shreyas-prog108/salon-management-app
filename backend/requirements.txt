@@ -13,3 +13,4 @@ SQLAlchemy
 requests
 psycopg2-binary
 gunicorn
+bcrypt

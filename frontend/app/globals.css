@@ -2,173 +2,168 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --primary-color: #7C3D6B;
-  --secondary-color: #A85C8A;
-  --primary-dark: #5C2D52;
-  --primary-soft: #F5EAF2;
-  --danger-color: #cf4c4c;
-}
-
 @layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
   body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f5f5;
+    @apply bg-stone-50 text-stone-900 font-sans;
+  }
+
+  ::selection {
+    @apply bg-amber-100 text-amber-900;
+  }
+
+  ::-moz-selection {
+    @apply bg-amber-100 text-amber-900;
   }
 }
 
 @layer components {
   /* ── Navbar ─────────────────────────────────────────────── */
   .navbar-custom {
-    @apply flex items-center justify-between px-4 py-3 shadow-md;
-    background: linear-gradient(135deg, #7C3D6B, #A85C8A);
+    @apply flex items-center justify-between px-6 py-4 shadow-sm border-b border-stone-200/50 bg-white/80 backdrop-blur-xl z-50 sticky top-0;
+  }
+  
+  .navbar-custom .text-white {
+    @apply text-stone-950 font-serif font-bold text-xl tracking-tight;
   }
 
   /* ── Sidebar ─────────────────────────────────────────────── */
   .sidebar-nav-link {
-    @apply flex items-center px-5 py-3 mx-3 my-1 rounded-lg border-l-4 border-transparent
-           font-medium text-gray-800 no-underline transition-all duration-200 text-[0.95rem];
+    @apply flex items-center px-5 py-3 mx-3 my-1 rounded-xl border-l-4 border-transparent
+           font-medium text-stone-600 no-underline transition-all duration-200 text-sm;
   }
   .sidebar-nav-link:hover {
-    @apply bg-[#F0E0EC] border-l-[#7C3D6B] text-[#7C3D6B] translate-x-1;
+    @apply bg-stone-100 text-stone-950 translate-x-1;
   }
   .sidebar-nav-link.active {
-    @apply bg-[#F5EAF2] border-l-[#7C3D6B] text-[#5C2D52] font-semibold;
+    @apply bg-stone-950 border-l-amber-400 text-white font-semibold shadow-md;
   }
   .sidebar-nav-link i {
-    @apply text-xl text-gray-600 mr-3 w-6 text-center;
+    @apply text-xl mr-3 w-6 text-center transition-colors;
   }
-  .sidebar-nav-link:hover i,
   .sidebar-nav-link.active i {
-    color: #7C3D6B;
+    @apply text-amber-400;
   }
 
   /* ── Cards ───────────────────────────────────────────────── */
   .card {
-    @apply bg-white rounded-xl shadow-md mb-5 border-0;
+    @apply bg-white/5 backdrop-blur-md rounded-[1.5rem] shadow-[0_8px_30px_rgba(0,0,0,0.2)] mb-6 border border-white/10 overflow-hidden;
   }
   .card-header {
-    @apply text-white font-semibold rounded-t-xl px-5 py-4;
-    background: linear-gradient(135deg, #7C3D6B, #A85C8A);
+    @apply text-white font-serif text-xl px-6 py-5 border-b border-white/10 bg-black/20 flex justify-between items-center;
   }
   .card-body {
-    @apply p-6;
+    @apply p-6 text-stone-300;
   }
 
   /* ── Stat cards ──────────────────────────────────────────── */
   .stat-card {
-    @apply p-6 rounded-xl text-white mb-5 transition-transform duration-200 shadow cursor-default;
+    @apply p-6 rounded-[1.5rem] text-white mb-5 transition-transform duration-300 shadow-md cursor-default relative overflow-hidden;
   }
   .stat-card:hover {
-    @apply -translate-y-1 shadow-lg;
+    @apply -translate-y-1 shadow-xl;
   }
-  .stat-card.primary  { background: linear-gradient(135deg, #7C3D6B 0%, #A85C8A 100%); }
-  .stat-card.success  { background: linear-gradient(135deg, #8B4577 0%, #C490B8 100%); }
-  .stat-card.info     { background: linear-gradient(135deg, #6B3060 0%, #A060A0 100%); }
-  .stat-card.warning  { background: linear-gradient(135deg, #9B5080 0%, #C490B8 100%); }
-  .stat-number { @apply text-5xl font-bold mb-1; }
-  .stat-label  { @apply text-sm opacity-95 font-medium; }
+  .stat-card.primary  { @apply bg-stone-950; }
+  .stat-card.success  { @apply bg-emerald-900; }
+  .stat-card.info     { @apply bg-blue-900; }
+  .stat-card.warning  { @apply bg-amber-600; }
+  .stat-number { @apply text-5xl font-serif mb-2 relative z-10; }
+  .stat-label  { @apply text-sm opacity-80 font-medium uppercase tracking-wider relative z-10; }
 
   /* ── Buttons ─────────────────────────────────────────────── */
   .btn {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-md font-medium
-           transition-all duration-200 cursor-pointer border border-transparent text-sm;
+    @apply inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-semibold
+           transition-all duration-200 cursor-pointer border border-transparent text-sm active:scale-95;
   }
   .btn-primary {
-    @apply bg-[#7C3D6B] text-white border-[#7C3D6B];
+    @apply bg-amber-500 text-stone-950 font-bold border-transparent shadow-[0_0_15px_rgba(245,158,11,0.2)];
   }
   .btn-primary:hover {
-    @apply bg-[#5C2D52] border-[#5C2D52] -translate-y-0.5 shadow-md;
+    @apply bg-amber-400 -translate-y-0.5 shadow-[0_0_20px_rgba(245,158,11,0.4)];
   }
   .btn-primary:disabled {
-    @apply opacity-60 cursor-not-allowed translate-y-0;
+    @apply opacity-50 cursor-not-allowed translate-y-0 active:scale-100;
   }
   .btn-secondary {
-    @apply bg-gray-500 text-white border-gray-500;
+    @apply bg-white/10 text-white border-white/20;
   }
-  .btn-secondary:hover { @apply bg-gray-600; }
+  .btn-secondary:hover {
+    @apply bg-white/20 text-white border-white/30;
+  }
   .btn-success {
-    @apply bg-[#8B4577] text-white border-[#8B4577];
+    @apply bg-emerald-600 text-white shadow-sm;
   }
-  .btn-success:hover { @apply bg-[#7C3D6B]; }
+  .btn-success:hover { @apply bg-emerald-700 -translate-y-0.5; }
   .btn-danger {
-    @apply bg-red-600 text-white border-red-600;
+    @apply bg-red-600 text-white shadow-sm;
   }
-  .btn-danger:hover { @apply bg-red-700 -translate-y-0.5 shadow; }
+  .btn-danger:hover { @apply bg-red-700 -translate-y-0.5; }
   .btn-info {
-    @apply bg-[#A060A0] text-white border-[#A060A0];
+    @apply bg-blue-600 text-white shadow-sm;
   }
-  .btn-info:hover { @apply bg-[#8B4577]; }
+  .btn-info:hover { @apply bg-blue-700 -translate-y-0.5; }
   .btn-warning {
-    @apply bg-yellow-500 text-white border-yellow-500;
+    @apply bg-amber-500 text-white shadow-sm;
   }
   .btn-outline-primary {
-    @apply bg-white text-[#7C3D6B] border-[#7C3D6B];
+    @apply bg-transparent text-amber-400 border-amber-400;
   }
   .btn-outline-primary:hover {
-    @apply bg-[#7C3D6B] text-white -translate-y-0.5 shadow;
+    @apply bg-amber-400 text-stone-950 -translate-y-0.5 shadow-[0_0_15px_rgba(245,158,11,0.4)];
   }
   .btn-outline-success {
-    @apply bg-white text-[#8B4577] border-[#8B4577];
-  }
-  .btn-outline-success:hover {
-    @apply bg-[#8B4577] text-white -translate-y-0.5 shadow;
-  }
-  .btn-outline-info {
-    @apply bg-white text-[#9B5080] border-[#9B5080];
-  }
-  .btn-outline-info:hover {
-    @apply bg-[#9B5080] text-white -translate-y-0.5 shadow;
+    @apply bg-transparent text-emerald-600 border-emerald-600;
   }
   .btn-outline-danger {
-    @apply bg-white text-red-600 border-red-600;
+    @apply bg-transparent text-red-600 border-red-600;
   }
-  .btn-outline-danger:hover {
-    @apply bg-red-600 text-white -translate-y-0.5 shadow;
-  }
-  .btn-sm { @apply px-3 py-1.5 text-xs; }
+  .btn-sm { @apply px-4 py-1.5 text-xs rounded-lg; }
 
   /* ── Forms ───────────────────────────────────────────────── */
   .form-control, .form-select {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-md text-sm
-           focus:outline-none focus:border-[#7C3D6B] focus:ring-2 focus:ring-[#7C3D6B]/25;
+    @apply w-full px-4 py-3 border border-white/10 rounded-xl text-sm bg-black/40 text-white placeholder-stone-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all;
   }
   .form-label {
-    @apply block text-sm font-medium text-gray-600 mb-1;
+    @apply block text-sm font-medium text-stone-300 mb-1.5;
   }
   .form-check-input {
-    @apply w-4 h-4 text-[#7C3D6B] border-gray-300 rounded;
+    @apply w-4 h-4 text-stone-950 border-stone-300 rounded focus:ring-stone-950;
   }
 
   /* ── Tables ──────────────────────────────────────────────── */
   .table {
-    @apply w-full bg-white border-separate border-spacing-0 text-sm;
+    @apply w-full bg-white border-separate border-spacing-0 text-sm table-auto;
   }
   .table thead th {
-    @apply bg-gray-100 text-gray-800 font-semibold px-4 py-3 border-b-2 border-gray-200
-           uppercase text-xs tracking-wide;
+    @apply bg-black/20 text-stone-400 font-semibold px-4 py-3 border-b border-white/10 uppercase text-xs tracking-wider text-left;
   }
   .table tbody td {
-    @apply px-4 py-3 text-gray-600 border-b border-gray-100 align-middle;
+    @apply px-4 py-3 text-stone-200 border-b border-white/5 align-middle bg-transparent;
   }
-  .table tbody tr:hover td { @apply bg-gray-50; }
+  .table tbody tr:hover td {
+    @apply bg-white/5;
+  }
 
   /* ── Badges ──────────────────────────────────────────────── */
   .badge {
-    @apply inline-block px-2.5 py-1 text-xs font-semibold rounded text-white;
+    @apply inline-flex items-center px-2.5 py-1 text-xs font-bold rounded-full uppercase tracking-wider;
   }
-  .badge-booked    { @apply bg-[#9B5080]; }
-  .badge-completed { @apply bg-[#7C3D6B]; }
-  .badge-cancelled { @apply bg-[#A080A0]; }
-  .bg-success { @apply bg-[#7C3D6B] text-white; }
-  .bg-danger  { @apply bg-red-600 text-white; }
-  .bg-warning { @apply bg-[#A060A0] text-white; }
-  .bg-info    { @apply bg-[#9B5080] text-white; }
+  .badge-booked    { @apply bg-amber-100 text-amber-800 border border-amber-200; }
+  .badge-completed { @apply bg-emerald-100 text-emerald-800 border border-emerald-200; }
+  .badge-cancelled { @apply bg-stone-100 text-stone-600 border border-stone-200; }
+  .bg-success { @apply bg-emerald-100 text-emerald-800; }
+  .bg-danger  { @apply bg-red-100 text-red-800; }
+  .bg-warning { @apply bg-amber-100 text-amber-800; }
+  .bg-info    { @apply bg-blue-100 text-blue-800; }
 
-  /* ── Login page ──────────────────────────────────────────── */
+  /* ── Login page (legacy fallback) ────────────────────────── */
   .login-container {
-    @apply min-h-screen flex items-center justify-center;
-    background: linear-gradient(135deg, #7C3D6B, #A85C8A);
+    @apply min-h-screen flex items-center justify-center bg-stone-50;
   }
   .login-card {
     @apply w-full max-w-md;
@@ -176,164 +171,116 @@
 
   /* ── Stylist / doctor cards ──────────────────────────────── */
   .doctor-card {
-    @apply transition-transform duration-200 cursor-pointer;
+    @apply transition-transform duration-300 cursor-pointer border border-stone-200/60;
   }
   .doctor-card:hover {
-    @apply -translate-y-1 shadow-lg;
+    @apply -translate-y-1 shadow-[0_20px_40px_rgba(0,0,0,0.08)];
   }
 
   /* ── Dashboard shortcuts ─────────────────────────────────── */
   .dashboard-shortcut {
     @apply flex flex-col items-center justify-center font-semibold
-           transition-all duration-300 cursor-pointer min-h-[120px] rounded-md
-           no-underline text-white;
+           transition-all duration-300 cursor-pointer min-h-[140px] rounded-[1.5rem]
+           no-underline text-stone-950 bg-stone-50 border border-stone-200/60 hover:bg-stone-100 hover:-translate-y-1 hover:shadow-lg;
   }
-  .dashboard-shortcut i { @apply text-3xl mb-2; }
+  .dashboard-shortcut i { @apply text-4xl mb-3 text-amber-500; }
 
   /* ── Loading spinner ─────────────────────────────────────── */
   .loading {
     @apply flex items-center justify-center py-16;
   }
   .spinner-border {
-    @apply inline-block w-10 h-10 rounded-full border-4 border-gray-200 animate-spin;
-    border-top-color: #7C3D6B;
+    @apply inline-block w-8 h-8 rounded-full border-4 border-stone-200 animate-spin;
+    border-top-color: #0c0a09;
   }
   .spinner-border-sm {
     @apply w-4 h-4 border-2;
   }
 
-  /* ── Modal overlay ───────────────────────────────────────── */
-  .custom-modal-overlay {
-    @apply fixed inset-0 z-[1055] flex items-start justify-center pt-10 overflow-y-auto;
-    background: rgba(0, 0, 0, 0.5);
+  /* ── Modals & Dialogs ────────────────────────────────────── */
+  .custom-modal-overlay, .alert-overlay, .confirm-overlay {
+    @apply fixed inset-0 z-[2000] flex items-center justify-center p-6 bg-stone-950/40 backdrop-blur-sm;
   }
   .modal-dialog { @apply relative mx-auto w-full max-w-lg; }
   .modal-dialog.modal-lg { @apply max-w-2xl; }
-  .modal-content {
-    @apply bg-white rounded-lg shadow-xl overflow-hidden;
+  
+  .modal-content, .alert-dialog, .confirm-dialog {
+    @apply bg-white rounded-[2rem] shadow-[0_20px_60px_rgba(0,0,0,0.2)] overflow-hidden w-full max-w-lg border border-stone-200/50;
   }
-  .modal-header {
-    @apply flex items-center justify-between px-6 py-4 text-white;
-    background: linear-gradient(135deg, #7C3D6B, #A85C8A);
+  .modal-header, .modal-header-green {
+    @apply flex items-center justify-between px-8 py-6 border-b border-stone-100 bg-stone-50;
   }
-  .modal-header-green {
-    @apply flex items-center justify-between px-5 py-4 text-white;
-    background: linear-gradient(135deg, #7C3D6B, #A85C8A);
-  }
-  .modal-title { @apply text-base font-semibold; }
-  .modal-body  { @apply p-6; }
+  .modal-title { @apply text-xl font-serif font-bold text-stone-950 m-0; }
+  .modal-body, .alert-body, .confirm-body  { @apply p-8; }
   .modal-footer {
-    @apply flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200;
+    @apply flex items-center justify-end gap-3 px-8 py-5 border-t border-stone-100 bg-stone-50;
   }
-  .btn-close {
-    @apply bg-transparent border-0 text-white opacity-80 cursor-pointer text-xl leading-none;
+  .btn-close, .btn-close-white, .alert-close, .confirm-close {
+    @apply w-8 h-8 rounded-full bg-stone-200 text-stone-600 flex items-center justify-center hover:bg-stone-300 hover:text-stone-950 transition-colors cursor-pointer border-0;
   }
-  .btn-close-white {
-    @apply bg-transparent border-0 text-white opacity-90 cursor-pointer text-2xl leading-none;
-  }
-  .btn-close::before, .btn-close-white::before { content: '×'; }
 
-  /* ── Alerts (Bootstrap-style inline) ────────────────────── */
-  .alert { @apply rounded-lg px-4 py-3 text-sm mb-4; }
-  .alert-danger  { @apply bg-red-50 text-red-700 border border-red-200; }
-  .alert-success { @apply bg-purple-50 text-purple-800 border border-purple-200; }
+  /* ── Alerts & Confirms ───────────────────────────────────── */
+  .alert { @apply rounded-xl px-5 py-4 text-sm mb-4 border; }
+  .alert-danger  { @apply bg-red-50 text-red-800 border-red-200 font-medium; }
+  .alert-success { @apply bg-emerald-50 text-emerald-800 border-emerald-200 font-medium; }
+
+  .confirm-header, .alert-header { @apply flex items-start justify-between gap-4 px-8 pt-8 pb-2; }
+  .confirm-title, .alert-title { @apply m-0 text-2xl font-serif font-bold text-stone-950; }
+  .confirm-message, .alert-message { @apply m-0 text-stone-600 leading-relaxed text-base; }
+  .confirm-actions, .alert-actions { @apply flex justify-end gap-3 px-8 pb-8 pt-6; }
+  .confirm-btn, .alert-btn { @apply min-w-[120px] rounded-xl font-semibold; }
+  .btn-light.confirm-btn { @apply bg-stone-100 border-stone-100 text-stone-700 hover:bg-stone-200; }
+
+  .alert-badge {
+    @apply w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-4;
+    background: #fef3c7; color: #d97706;
+  }
+  .tone-error .alert-badge { background: #fee2e2; color: #dc2626; }
+  .tone-warning .alert-badge { background: #fef3c7; color: #d97706; }
 
   /* ── Time slots ──────────────────────────────────────────── */
   .time-slots-container {
-    @apply grid gap-2 p-2 bg-gray-50 rounded-lg max-h-72 overflow-y-auto;
+    @apply grid gap-3 p-3 bg-stone-50 rounded-2xl max-h-[300px] overflow-y-auto border border-stone-200/50;
     grid-template-columns: repeat(4, 1fr);
   }
   .time-slot {
-    @apply flex items-center justify-center px-2 py-3 border-2 border-gray-200 rounded-lg
-           text-center cursor-pointer bg-white font-medium text-gray-600 text-sm
-           transition-all duration-200;
+    @apply flex items-center justify-center px-2 py-3 border border-stone-200 rounded-xl
+           text-center cursor-pointer bg-white font-semibold text-stone-600 text-sm
+           transition-all duration-200 shadow-sm;
   }
   .time-slot:hover {
-    @apply bg-[#F5EAF2] border-[#A85C8A] text-[#7C3D6B] -translate-y-0.5;
+    @apply bg-stone-100 text-stone-950 border-stone-300 -translate-y-0.5;
   }
   .time-slot.selected {
-    @apply text-white font-semibold border-[#7C3D6B];
-    background: linear-gradient(135deg, #7C3D6B, #A85C8A);
-  }
-
-  /* ── Alert dialog (custom) ───────────────────────────────── */
-  .alert-overlay {
-    @apply fixed inset-0 z-[2100] flex items-center justify-center p-6;
-    background: rgba(30, 10, 25, 0.42);
-    backdrop-filter: blur(4px);
-  }
-  .alert-dialog {
-    @apply overflow-hidden;
-    width: min(520px, 100%);
-    background: linear-gradient(180deg, #ffffff 0%, #fdf7fb 100%);
-    border: 1px solid rgba(124, 61, 107, 0.18);
-    border-radius: 20px;
-    box-shadow: 0 28px 70px rgba(60, 20, 50, 0.22);
-  }
-  .alert-header {
-    display: grid;
-    grid-template-columns: 52px 1fr 40px;
-    @apply items-center gap-3 px-6 pt-5 pb-2;
-  }
-  .alert-badge {
-    @apply w-[52px] h-[52px] rounded-2xl inline-flex items-center justify-center text-xl;
-    background: #F5EAF2;
-    color: #7C3D6B;
-  }
-  .tone-error   .alert-badge { background: #f9eded; color: #c65353; }
-  .tone-warning .alert-badge { background: #fbf4e7; color: #b88f36; }
-  .alert-title  { @apply m-0 text-lg font-bold text-[#2D1428]; }
-  .alert-close  {
-    @apply w-10 h-10 border-0 rounded-full inline-flex items-center justify-center cursor-pointer;
-    background: #F5EAF2;
-    color: #7C3D6B;
-  }
-  .alert-body    { @apply px-6 pb-2; }
-  .alert-message { @apply m-0 text-[#3D2040] leading-relaxed whitespace-pre-line; }
-  .alert-actions { @apply flex justify-end px-6 pb-6 pt-4; }
-  .alert-btn     { @apply min-w-[108px] rounded-xl font-semibold; }
-
-  /* ── Confirm dialog (custom) ─────────────────────────────── */
-  .confirm-overlay {
-    @apply fixed inset-0 z-[2000] flex items-center justify-center p-6;
-    background: rgba(30, 10, 25, 0.42);
-    backdrop-filter: blur(4px);
-  }
-  .confirm-dialog {
-    @apply overflow-hidden;
-    width: min(480px, 100%);
-    background: linear-gradient(180deg, #ffffff 0%, #fdf7fb 100%);
-    border: 1px solid rgba(124, 61, 107, 0.18);
-    border-radius: 20px;
-    box-shadow: 0 28px 70px rgba(60, 20, 50, 0.22);
-  }
-  .confirm-header  { @apply flex items-start justify-between gap-4 px-6 pt-5 pb-3; }
-  .confirm-title   { @apply m-0 text-xl font-bold text-[#2D1428]; }
-  .confirm-subtitle { @apply mt-1 text-[#7A5070] text-sm; }
-  .confirm-close   {
-    @apply w-10 h-10 border-0 rounded-full inline-flex items-center justify-center cursor-pointer flex-shrink-0;
-    background: #F5EAF2;
-    color: #7C3D6B;
-  }
-  .confirm-body    { @apply px-6 pb-2; }
-  .confirm-message { @apply m-0 text-[#3D2040] leading-snug; }
-  .confirm-actions { @apply flex justify-end gap-3 px-6 pb-6 pt-4; }
-  .confirm-btn     { @apply min-w-[108px] rounded-xl font-semibold; }
-  .btn-light.confirm-btn {
-    background: #F0E0EC;
-    border-color: #F0E0EC;
-    @apply text-[#4A2040];
+    @apply bg-stone-950 text-amber-400 border-stone-950 shadow-md;
   }
 
   /* ── Misc ────────────────────────────────────────────────── */
-  .detail-row + .detail-row { @apply mt-4; }
+  .detail-row + .detail-row { @apply mt-5; }
   .detail-label {
-    @apply block mb-1 text-xs font-bold tracking-wide uppercase text-[#6B4060];
+    @apply block mb-1 text-xs font-bold tracking-widest uppercase text-stone-400;
   }
-  .detail-value { @apply m-0 leading-relaxed text-[#2D1428]; }
+  .detail-value { @apply m-0 text-base text-stone-900 font-medium; }
   .action-buttons { @apply flex items-center gap-2 flex-wrap; }
   .table-action-btn {
-    @apply inline-flex items-center justify-center gap-2 px-3 py-2 rounded-[10px] whitespace-nowrap text-xs;
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg whitespace-nowrap text-xs font-bold transition-all;
   }
   .table-responsive { @apply overflow-x-auto; }
 }
+
+
+  /* Custom Scrollbar for Dark UI */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-stone-700/50 rounded-full;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-stone-600;
+  }
+  .table { @apply bg-transparent; }
